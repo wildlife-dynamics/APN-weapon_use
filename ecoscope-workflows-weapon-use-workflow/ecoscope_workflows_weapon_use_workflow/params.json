@@ -290,6 +290,35 @@
     "events": {
       "additionalProperties": false,
       "properties": {
+        "event_states": {
+          "default": null,
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "new",
+                "title": "New"
+              },
+              {
+                "const": "active",
+                "title": "Active"
+              },
+              {
+                "const": "resolved",
+                "title": "Resolved"
+              },
+              {
+                "const": "review",
+                "title": "Review"
+              }
+            ]
+          },
+          "title": "Event State",
+          "type": "array",
+          "description": "Choose to analyze events with a certain state. If left empty, events of all states will be analyzed",
+          "uniqueItems": true,
+          "ecoscope:advanced": true
+        },
         "force_point_geometry": {
           "default": true,
           "title": "Force Point Geometry",
@@ -499,6 +528,27 @@
       "type": "object",
       "title": ""
     },
+    "ammo_table_columns": {
+      "additionalProperties": false,
+      "properties": {
+        "duplicate_strategy": {
+          "default": "suffix",
+          "enum": [
+            "suffix",
+            "skip",
+            "overwrite",
+            "error"
+          ],
+          "title": "Duplicate Strategy",
+          "type": "string",
+          "description": "Strategy for handling a rename whose new name is already taken. 'suffix': append _1, _2, etc. to the new name; 'skip': skip the rename, leaving the column under its original name; 'overwrite': replace the existing column; 'error': raise ValueError.",
+          "ecoscope:advanced": true
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Rename Ammo Table Columns"
+    },
     "ammo_table": {
       "additionalProperties": false,
       "properties": {
@@ -527,6 +577,27 @@
       "required": [],
       "type": "object",
       "title": ""
+    },
+    "personnel_columns": {
+      "additionalProperties": false,
+      "properties": {
+        "duplicate_strategy": {
+          "default": "suffix",
+          "enum": [
+            "suffix",
+            "skip",
+            "overwrite",
+            "error"
+          ],
+          "title": "Duplicate Strategy",
+          "type": "string",
+          "description": "Strategy for handling a rename whose new name is already taken. 'suffix': append _1, _2, etc. to the new name; 'skip': skip the rename, leaving the column under its original name; 'overwrite': replace the existing column; 'error': raise ValueError.",
+          "ecoscope:advanced": true
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Rename Personnel Table Columns"
     },
     "personnel_table": {
       "additionalProperties": false,
@@ -557,6 +628,55 @@
       "type": "object",
       "title": ""
     },
+    "extract_desfundar": {
+      "additionalProperties": false,
+      "properties": {
+        "fan_out": {
+          "default": true,
+          "title": "Fan Out",
+          "type": "boolean",
+          "description": "Only used when output_type is 'series'. If true (default), expand the extracted collection into indexed columns prefixed by output_column_name. If false, store it as a list in a single output_column_name column."
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Extract Necesidad de Desfundar"
+    },
+    "extract_lesion_desc": {
+      "additionalProperties": false,
+      "properties": {
+        "fan_out": {
+          "default": true,
+          "title": "Fan Out",
+          "type": "boolean",
+          "description": "Only used when output_type is 'series'. If true (default), expand the extracted collection into indexed columns prefixed by output_column_name. If false, store it as a list in a single output_column_name column."
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Extract Lesion Description"
+    },
+    "lesiones_columns": {
+      "additionalProperties": false,
+      "properties": {
+        "duplicate_strategy": {
+          "default": "suffix",
+          "enum": [
+            "suffix",
+            "skip",
+            "overwrite",
+            "error"
+          ],
+          "title": "Duplicate Strategy",
+          "type": "string",
+          "description": "Strategy for handling a rename whose new name is already taken. 'suffix': append _1, _2, etc. to the new name; 'skip': skip the rename, leaving the column under its original name; 'overwrite': replace the existing column; 'error': raise ValueError.",
+          "ecoscope:advanced": true
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Rename Lesiones Table Columns"
+    },
     "lesiones_table": {
       "additionalProperties": false,
       "properties": {
@@ -585,6 +705,20 @@
       "required": [],
       "type": "object",
       "title": ""
+    },
+    "extract_especie": {
+      "additionalProperties": false,
+      "properties": {
+        "fan_out": {
+          "default": true,
+          "title": "Fan Out",
+          "type": "boolean",
+          "description": "Only used when output_type is 'series'. If true (default), expand the extracted collection into indexed columns prefixed by output_column_name. If false, store it as a list in a single output_column_name column."
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Extract Especie Exotica"
     }
   },
   "$defs": {
@@ -1071,6 +1205,12 @@
         "custom_colors"
       ]
     },
+    "events": {
+      "ui:order": [
+        "event_states",
+        "force_point_geometry"
+      ]
+    },
     "spatial_features": {
       "ui:order": [
         "source",
@@ -1125,9 +1265,15 @@
       "weapon_legend_title",
       "weapon_map_layer",
       "time_interval_config",
+      "ammo_table_columns",
       "ammo_table",
+      "personnel_columns",
       "personnel_table",
-      "lesiones_table"
+      "extract_desfundar",
+      "extract_lesion_desc",
+      "lesiones_columns",
+      "lesiones_table",
+      "extract_especie"
     ]
   },
   "additionalProperties": false
