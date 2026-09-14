@@ -1,0 +1,19 @@
+[workspace]
+name = "apn-weapon-use"
+channels = [
+  'file:///tmp/ecoscope-workflows-custom/release/artifacts/',
+  'https://repo.prefix.dev/ecoscope-workflows/',
+  'https://repo.prefix.dev/ecoscope-workflows-custom/',
+  'conda-forge',
+]
+platforms = ['linux-64', 'osx-arm64', 'osx-64', 'win-64']
+
+[dependencies]
+wt-compiler = "==0.8.2"
+graphviz = "*"
+
+[tasks.compile-weapon-use]
+cmd = './dev/recompile.sh --install'
+
+[tasks.recompile-weapon-use]
+cmd = './dev/recompile.sh --update'

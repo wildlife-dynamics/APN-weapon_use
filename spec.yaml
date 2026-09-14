@@ -1,0 +1,1285 @@
+id: weapon_use
+
+requirements:
+  - name: ecoscope-platform
+    version: ">=2.17.0,<3.0.0"
+    channel: https://repo.prefix.dev/ecoscope-workflows/
+
+  - name: ecoscope-workflows-ext-custom
+    version: "0.1.0rc23"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+
+  - name: pydeck
+    version: 0.9.2
+    channel: conda-forge
+
+  - name: ecoscope-workflows-ext-apn
+    version: "0.0.30"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+
+rjsf-overrides:
+  properties:
+    plot_palette.properties.colormap.description: "Select a color palette for all charts. Use Set1, Set2, or Dark2 for a small number of categories (up to 8). Use tab20, tab20b, or tab20c when you have many categories (up to 20)."
+    plot_palette.properties.custom_colors.description: "Optional. Provide one hex color per category (e.g. #e41a1c, #377eb8). Leave empty to use the palette above."
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.input_column_name.title: Groupby
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.input_column_name.description: Color incidents on the map by the selected attribute. Each unique value is assigned a distinct color.
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.input_column_name.default: event_type_display
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.input_column_name.ecoscope:advanced: false
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.input_column_name.oneOf:
+      - const: event_type_display
+        title: Event Type
+      - const: serial_number
+        title: Event ID
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.colormap.title: Palette
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.colormap.description: "Select a color palette for the map markers. Use Set1, Set2, or Dark2 for a small number of categories; use tab20, tab20b, or tab20c when you have many."
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.colormap.ecoscope:advanced: false
+    Trends Over Time.properties.time_interval_config.properties.time_interval.title: "Time Interval"
+    Trends Over Time.properties.time_interval_config.properties.time_interval.default: "month"
+    Trends Over Time.properties.time_interval_config.properties.time_interval.oneOf:
+      - const: day
+        title: Day
+      - const: week
+        title: Week
+      - const: month
+        title: Month
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.custom_colors.title: Custom Colors
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.custom_colors.description: "Optional. Provide one hex color per category (e.g. #e41a1c, #377eb8). Leave empty to use the palette above."
+    Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.custom_colors.ecoscope:advanced: false
+    Map of Weapon-Use Incidents.properties.weapon_legend_title.properties.var.title: Title
+    Map of Weapon-Use Incidents.properties.weapon_legend_title.properties.var.description: Legend title for the weapon-use incidents map.
+    Map of Weapon-Use Incidents.properties.weapon_legend_title.properties.var.default: Legend
+    Map of Weapon-Use Incidents.properties.weapon_legend_title.properties.var.ecoscope:advanced: false
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.description: ""
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.auto_highlight.type: boolean
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.auto_highlight.default: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.auto_highlight.title: Auto Highlight
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.auto_highlight.description: Enable automatic highlighting when hovering over a marker.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.auto_highlight.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.opacity.type: number
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.opacity.default: 0.9
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.opacity.title: Opacity
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.opacity.description: Transparency of the markers, from 0 (invisible) to 1 (fully opaque).
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.opacity.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.pickable.type: boolean
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.pickable.default: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.pickable.title: Pickable
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.pickable.description: Allow markers to be interactive (hoverable and clickable).
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.pickable.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_position.type: string
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_position.default: geometry.coordinates
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_position.title: Position
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_position.description: Column or expression used to determine the marker position on the map.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_position.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_fill_color.type: string
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_fill_color.default: column_color
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_fill_color.title: Fill Color
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_fill_color.description: Column used for marker fill color. Defaults to the colormap output.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_fill_color.enum:
+      - column_color
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_fill_color.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_radius.anyOf:
+      - type: integer
+        default: 8
+        title: Radius Size
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_radius.default: 8
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_radius.title: Radius
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_radius.description: Size of each incident marker.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_radius.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_line_width.anyOf:
+      - type: integer
+        default: 1
+        title: Line Width Size
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_line_width.default: 1
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_line_width.title: Line Width
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_line_width.description: Width of the marker outline when Stroked is enabled.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_line_width.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_elevation.anyOf:
+      - type: integer
+        default: 0
+        title: Elevation Height
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_elevation.default: 0
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_elevation.title: Elevation
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_elevation.description: Height of each marker for 3D visualisation.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.get_elevation.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_units.type: string
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_units.default: pixels
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_units.title: Radius Units
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_units.description: Units for the marker radius — pixels (screen-space) or meters (world-space).
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_units.enum:
+      - meters
+      - pixels
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_units.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_scale.type: number
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_scale.default: 1
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_scale.title: Radius Scale
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_scale.description: Global multiplier applied to all marker radii.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_scale.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_min_pixels.type: number
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_min_pixels.default: 0
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_min_pixels.title: Radius Min Pixels
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_min_pixels.description: Minimum radius size in pixels regardless of zoom level.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_min_pixels.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_max_pixels.type: number
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_max_pixels.default: 9999
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_max_pixels.title: Radius Max Pixels
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_max_pixels.description: Maximum radius size in pixels regardless of zoom level.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.radius_max_pixels.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_units.type: string
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_units.default: pixels
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_units.title: Line Width Units
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_units.description: Units for the outline width — pixels (screen-space) or meters (world-space).
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_units.enum:
+      - meters
+      - pixels
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_units.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_scale.type: number
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_scale.default: 1
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_scale.title: Line Width Scale
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_scale.description: Global multiplier applied to all outline widths.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_scale.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_min_pixels.type: number
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_min_pixels.default: 0
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_min_pixels.title: Line Width Min Pixels
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_min_pixels.description: Minimum outline width in pixels regardless of zoom level.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_min_pixels.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_max_pixels.type: number
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_max_pixels.default: 9999
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_max_pixels.title: Line Width Max Pixels
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_max_pixels.description: Maximum outline width in pixels regardless of zoom level.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.line_width_max_pixels.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.stroked.type: boolean
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.stroked.default: false
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.stroked.title: Stroked
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.stroked.description: Draw a border outline around each marker.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.stroked.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.filled.type: boolean
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.filled.default: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.filled.title: Filled
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.filled.description: Fill the interior of each marker with color.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.filled.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.elevation_scale.type: number
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.elevation_scale.default: 1
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.elevation_scale.title: Elevation Scale
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.elevation_scale.description: Global multiplier applied to the elevation value for 3D visualisation.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.elevation_scale.ecoscope:advanced: true
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.billboard.type: boolean
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.billboard.default: false
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.billboard.title: Billboard
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.billboard.description: Always face the marker toward the camera regardless of map tilt.
+    Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.billboard.ecoscope:advanced: true
+    Ammunition Summary Table.properties.ammo_table.properties.table_config.properties.enable_sorting.default: true
+    Ammunition Summary Table.properties.ammo_table.properties.table_config.properties.enable_filtering.default: true
+    Ammunition Summary Table.properties.ammo_table.properties.table_config.properties.enable_download.default: true
+    Personnel Activity Table.properties.personnel_table.properties.table_config.properties.enable_sorting.default: true
+    Personnel Activity Table.properties.personnel_table.properties.table_config.properties.enable_filtering.default: true
+    Personnel Activity Table.properties.personnel_table.properties.table_config.properties.enable_download.default: true
+    Agresion Breakdown.properties.lesiones_table.properties.table_config.properties.enable_sorting.default: true
+    Agresion Breakdown.properties.lesiones_table.properties.table_config.properties.enable_filtering.default: true
+    Agresion Breakdown.properties.lesiones_table.properties.table_config.properties.enable_download.default: true
+    Spatial Features.properties.spatial_features.properties.source.default:
+      query: null
+    Local Spatial Features.properties.local_spatial_file.properties.layer.default: ""
+  # uiSchema:
+  #   "workflow_details.description.ui:widget": textarea
+  #   "workflow_details.description.ui:options.rows": 5
+  $defs:
+    EarthRangerSource:
+      title: EarthRanger
+      type: object
+      properties:
+        query:
+          title: Query
+          default: null
+          anyOf:
+            - type: "null"
+              title: "--- select ---"
+            - $ref: "#/$defs/FeatureSetQuery"
+            - $ref: "#/$defs/FeatureTypeQuery"
+            - $ref: "#/$defs/FeatureIdQuery"
+  uiSchema:
+    Spatial Features.spatial_features.source:
+      ui:options:
+        label: false
+    Spatial Features.spatial_features.source.query:
+      ui:options:
+        label: false
+    Spatial Features.spatial_features.source.query.anyOf:
+      - ui:options:
+          label: false
+      - ui:options:
+          label: false
+      - ui:options:
+          label: false
+    Spatial Features.spatial_features.legend_title:
+      ui:placeholder: "e.g. Park Boundary"
+    Map of Weapon-Use Incidents.weapon_map_layer.layer_style.get_fill_color:
+      ui:widget: hidden
+    Map of Weapon-Use Incidents.weapon_map_layer.layer_style.get_line_color:
+      ui:widget: hidden
+    Map of Weapon-Use Incidents.weapon_map_layer.layer_style.get_position:
+      ui:widget: hidden
+
+task-instance-defaults:
+  skipif:
+    conditions:
+      - any_is_empty_df
+      - any_dependency_skipped
+
+workflow:
+
+  # Configure workflow parameters: name, data source, time range, locale, base maps, and chart color palette
+
+  - name: Set Workflow Details
+    id: workflow_details
+    task: set_workflow_details
+
+  - name: Data Source
+    id: er_client
+    task: set_er_connection
+
+  - id: user_details
+    task: get_user_me
+    partial:
+      client: ${{ workflow.er_client.return }}
+
+  - name: Define Base Maps
+    id: base_maps
+    task: set_base_maps
+
+  - name: Set Locale
+    id: locale
+    task: set_locale
+    partial:
+      locale_str: es_ES
+
+  - name: Time Range
+    id: time_range
+    task: set_time_range
+    partial:
+      time_format: "%d %b %Y %H:%M:%S"
+
+  - name: Extract Timezone Selection
+    id: get_timezone
+    task: get_timezone_from_time_range
+    partial:
+      time_range: ${{ workflow.time_range.return }}
+
+  - name: Plot Color Palette
+    id: plot_palette
+    task: set_color_palette
+
+  - name: Define Groupers
+    id: groupers
+    task: set_groupers
+    partial:
+      groupers: []
+
+  # Pull amenazas_funcionario and animal_exotico events from EarthRanger for the selected time range
+
+  - name: Weapon Use Events
+    id: events
+    task: get_events
+    partial:
+      client: ${{ workflow.er_client.return }}
+      time_range: ${{ workflow.time_range.return }}
+      event_columns:
+        - id
+        - time
+        - event_type
+        - serial_number
+        - state
+        - geometry
+        - event_details
+      event_types:
+        - amenazas_funcionario
+        - animal_exotico
+      include_details: true
+      raise_on_empty: false
+      include_updates: false
+      include_display_values: true
+      include_related_events: false
+      include_null_geometry: true
+
+  - name: Convert Timezone
+    id: events_tz
+    task: convert_values_to_timezone
+    partial:
+      df: ${{ workflow.events.return }}
+      timezone: ${{ workflow.get_timezone.return }}
+      columns:
+        - time
+
+  # Expand event_details JSON into columns and split events by incident type for downstream tasks
+
+  - name: Process Event Details
+    id: processed_events
+    task: process_events_details
+    partial:
+      df: ${{ workflow.events_tz.return }}
+      client: ${{ workflow.er_client.return }}
+      map_to_titles: false
+      ordered: true
+
+  - name: Filter Agresion Events
+    id: processed_agresion
+    task: filter_row_values
+    partial:
+      df: ${{ workflow.processed_events.return }}
+      column: event_type
+      values:
+        - amenazas_funcionario
+
+  - name: Filter Exotica Events
+    id: processed_exotica
+    task: filter_row_values
+    partial:
+      df: ${{ workflow.processed_events.return }}
+      column: event_type
+      values:
+        - animal_exotico
+
+  # Weapon use filter & extraction
+
+  - title: Weapon Use Extraction
+    type: task-group
+    description: "Filter events to those with actual weapon use and build combined dataset."
+    tasks:
+
+      # Count uso_arma entries per event across both event types
+      - name: Count Weapon Uses per Event
+        id: uso_arma_count
+        task: extract_array_length_from_json_column
+        partial:
+          df: ${{ workflow.processed_events.return }}
+          column_name: event_details
+          field_name: uso_arma
+          output_column_name: uso_arma_count
+
+      # Keep only events where weapon was actually fired (uso_arma array is non-empty)
+      - name: Filter Events with Weapon Use
+        id: weapon_events
+        task: filter_numeric_gt
+        partial:
+          df: ${{ workflow.uso_arma_count.return }}
+          column_name: uso_arma_count
+          value: 0.0
+          reset_index: true
+
+      # weapon_exotica is kept for downstream abatidos and accion_control sections
+      - name: Filter Exotica Weapon Events
+        id: weapon_exotica
+        task: filter_row_values
+        partial:
+          df: ${{ workflow.weapon_events.return }}
+          column: event_type
+          values:
+            - animal_exotico
+
+      # Explode uso_arma across ALL weapon events together (both types in one pass).
+      # Splitting before exploding caused a cascade skip when one event type was absent:
+      # empty weapon_agresion → skip → skip → all_weapon_uses skipped → tables empty.
+      # Exploding together avoids this — all_weapon_uses is non-empty whenever weapon_events has rows.
+      - name: Explode All Weapon Uses
+        id: exploded_weapon_uses
+        task: explode_json_array_column
+        partial:
+          df: ${{ workflow.weapon_events.return }}
+          json_column: event_details
+          array_field: uso_arma
+          parent_columns:
+            - time
+            - serial_number
+            - event_type
+            - event_type_display
+
+      # Agresion rows have 'tirador', exotica rows have 'nombre_tirador' — merge into one column
+      - name: Normalise Shooter Column
+        id: all_weapon_uses
+        task: consolidate_cols
+        partial:
+          df: ${{ workflow.exploded_weapon_uses.return }}
+          source_columns:
+            - tirador
+            - nombre_tirador
+          output_column: tirador_name
+          drop_sources: true
+
+  # Headline statistics
+
+  - title: Headline Statistics
+    type: task-group
+    description: "Stat cards: total incidents, total ammo, total personnel, total animals killed."
+    tasks:
+
+      # Total incidents
+      - name: Count Total Weapon-Use Incidents
+        id: total_incidents
+        task: dataframe_count
+        partial:
+          df: ${{ workflow.weapon_events.return }}
+
+      - name: Create Widget for Total Incidents
+        id: total_incidents_sv
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Incidentes con uso de armamento"
+          decimal_places: 0
+          data: ${{ workflow.total_incidents.return }}
+
+      # Total ammunition
+      - name: Sum Total Ammunition Used
+        id: total_ammo
+        task: dataframe_column_sum
+        partial:
+          df: ${{ workflow.all_weapon_uses.return }}
+          column_name: cantidad_municiones
+
+      - name: Create Widget for Total Ammunition
+        id: total_ammo_sv
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Total de municiones utilizadas"
+          decimal_places: 0
+          data: ${{ workflow.total_ammo.return }}
+
+      # Unique personnel
+      - name: Count Unique Personnel
+        id: total_personnel
+        task: dataframe_column_nunique
+        partial:
+          df: ${{ workflow.all_weapon_uses.return }}
+          column_name: tirador_name
+
+      - name: Create Widget for Total Personnel
+        id: total_personnel_sv
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Personal que efectuó disparos"
+          decimal_places: 0
+          data: ${{ workflow.total_personnel.return }}
+
+      # Animals killed (Exótica only)
+      - name: Count Abatidos per Exotica Event
+        id: abatidos_per_event
+        task: extract_array_length_from_json_column
+        partial:
+          df: ${{ workflow.weapon_exotica.return }}
+          column_name: event_details
+          field_name: abatidos
+          output_column_name: abatidos_count
+
+      - name: Sum Total Animals Killed
+        id: total_abatidos
+        task: dataframe_column_sum
+        partial:
+          df: ${{ workflow.abatidos_per_event.return }}
+          column_name: abatidos_count
+
+      - name: Create Widget for Total Animals Killed
+        id: total_abatidos_sv
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Animales abatidos (Exótica)"
+          decimal_places: 0
+          data: ${{ workflow.total_abatidos.return }}
+
+  - title: Spatial Features
+    type: task-group
+    description: "Fetch spatial features from EarthRanger and render them as a map layer."
+    tasks:
+      - id: spatial_features
+        task: get_spatial_features
+        partial:
+          client: ${{ workflow.er_client.return }}
+
+      - id: spatial_features_layer
+        task: create_spatial_features_layer
+        partial:
+          geodataframe: ${{ workflow.spatial_features.return }}
+          tooltip_columns: []
+
+  - title: Local Spatial Features
+    type: task-group
+    description: "Load spatial features from a local file and render them as a map layer."
+    tasks:
+      - id: local_spatial_file
+        task: load_local_spatial_file
+
+      - id: local_spatial_features_layer
+        task: create_spatial_features_layer
+        partial:
+          geodataframe: ${{ workflow.local_spatial_file.return }}
+          tooltip_columns: []
+
+  # Map of all weapon-use incidents; color grouping is configurable by the user
+
+  - title: Map of Weapon-Use Incidents
+    type: task-group
+    description: "Map of weapon-use incidents. Use the Groupby setting to color points by event type, event ID, or any other available attribute."
+    tasks:
+
+      - name: ""
+        id: weapon_events_colormap
+        task: apply_qualitative_color_map
+        partial:
+          df: ${{ workflow.weapon_events.return }}
+
+      - id: weapon_legend_title
+        task: set_string_var
+
+      - name: Create Weapon Events Map Layer
+        id: weapon_map_layer
+        task: create_scatterplot_layer
+        partial:
+          geodataframe: ${{ workflow.weapon_events_colormap.return }}
+          legend:
+            title: ${{ workflow.weapon_legend_title.return }}
+            label_column: column_label
+            color_column: column_color
+          data_url: null
+          tooltip_columns:
+            - serial_number
+            - event_type_display
+            - time
+            - reported_by
+
+      - id: optional_geo_layers
+        task: collect_optional_layers
+        skipif:
+          conditions:
+            - never
+        partial:
+          layers:
+            - ${{ workflow.spatial_features_layer.return }}
+            - ${{ workflow.local_spatial_features_layer.return }}
+            - ${{ workflow.weapon_map_layer.return }}
+
+      - id: weapon_map_view_state
+        task: view_state_from_layers
+        partial:
+          layers:
+            - ${{ workflow.weapon_map_layer.return }}
+          max_zoom: 20
+
+      - name: Draw Weapon Use Map
+        id: weapon_map
+        task: draw_map
+        partial:
+          geo_layers: ${{ workflow.optional_geo_layers.return }}
+          tile_layers: ${{ workflow.base_maps.return }}
+          view_state: ${{ workflow.weapon_map_view_state.return }}
+          static: false
+          title: null
+          output_type: html
+          max_zoom: 17
+          legend_style:
+            placement: bottom-right
+
+      - name: Add Fullscreen to Map
+        id: weapon_map_fullscreen
+        task: add_fullscreen_to_map
+        partial:
+          html: ${{ workflow.weapon_map.return }}
+
+      - name: Persist Weapon Use Map
+        id: weapon_map_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.weapon_map_fullscreen.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: weapon_map
+
+      - name: Create Map Widget
+        id: weapon_map_widget
+        task: create_map_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Mapa de incidentes"
+          data: ${{ workflow.weapon_map_html.return }}
+
+  # Trend charts: incidents and ammunition use over the selected period
+
+  - title: Trends Over Time
+    type: task-group
+    description: "Line charts of incidents and ammunition use over time."
+    tasks:
+
+      # Single time interval selector shared by both line charts
+      - id: time_interval_config
+        task: get_time_interval
+
+      # Line chart: incidents per selected interval, one line per event type
+      - name: Draw Incidents Trend Line Chart
+        id: incidents_trend_chart
+        task: draw_time_series_line_chart_grouped
+        partial:
+          dataframe: ${{ workflow.weapon_events.return }}
+          x_axis: time
+          y_axis: serial_number
+          category: event_type_display
+          agg_function: count
+          time_interval: ${{ workflow.time_interval_config.return }}
+          color_palette: ${{ workflow.plot_palette.return }}
+          layout_style:
+            showlegend: true
+            legend_title: "Tipo de evento"
+            hovermode: "x unified"
+            xaxis:
+              title: "Período"
+            yaxis:
+              title: "Nro. de incidentes"
+
+      - name: Persist Incidents Trend Chart
+        id: incidents_trend_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.incidents_trend_chart.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: incidents_trend
+
+      - name: Create Widget for Incidents Trend
+        id: incidents_trend_sv
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Uso de armamento por mes"
+          data: ${{ workflow.incidents_trend_html.return }}
+
+      # Line chart: ammunition used per selected interval, one line per event type
+      - name: Draw Ammunition Trend Line Chart
+        id: ammo_trend_chart
+        task: draw_time_series_line_chart_grouped
+        partial:
+          dataframe: ${{ workflow.all_weapon_uses.return }}
+          x_axis: time
+          y_axis: cantidad_municiones
+          category: event_type_display
+          agg_function: sum
+          time_interval: ${{ workflow.time_interval_config.return }}
+          color_palette: ${{ workflow.plot_palette.return }}
+          layout_style:
+            showlegend: true
+            legend_title: "Tipo de evento"
+            hovermode: "x unified"
+            xaxis:
+              title: "Período"
+            yaxis:
+              title: "Cantidad de municiones"
+
+      - name: Persist Ammunition Trend Chart
+        id: ammo_trend_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.ammo_trend_chart.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: ammo_trend
+
+      - name: Create Widget for Ammunition Trend
+        id: ammo_trend_sv
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Uso de municiones por mes"
+          data: ${{ workflow.ammo_trend_html.return }}
+
+  # Aggregate ammunition usage by type across all weapon-use entries
+
+  - title: Ammunition Summary Table
+    type: task-group
+    description: "Total ammunition rounds used, grouped by ammunition type."
+    tasks:
+
+      - name: Summarize Ammunition by Type
+        id: ammo_by_type
+        task: summarize_df
+        partial:
+          df: ${{ workflow.all_weapon_uses.return }}
+          groupby_cols:
+            - tipo_municion
+          reset_index: true
+          summary_params:
+            - display_name: "Cantidad de eventos"
+              aggregator: count
+              column: serial_number
+              decimal_places: 0
+            - display_name: "Total municiones"
+              aggregator: sum
+              column: cantidad_municiones
+              decimal_places: 0
+
+      - name: Rename Ammo Table Columns
+        id: ammo_table_columns
+        task: map_columns
+        partial:
+          df: ${{ workflow.ammo_by_type.return }}
+          raise_if_not_found: false
+          retain_columns: null
+          drop_columns: null
+          rename_columns:
+            tipo_municion: "Tipo de munición"
+
+      - id: ammo_table
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.ammo_table_columns.return }}
+
+      - name: Fix Ammunition Table Headers
+        id: ammo_table_fixed
+        task: preserve_table_headers
+        partial:
+          html: ${{ workflow.ammo_table.return }}
+
+      - name: Persist Ammunition Table
+        id: ammo_table_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.ammo_table_fixed.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: ammo_table
+
+      - name: Create Widget for Ammunition Table
+        id: ammo_table_sv
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Uso de munición por tipo"
+          data: ${{ workflow.ammo_table_html.return }}
+
+  # Per-officer breakdown built by merging agresion and exotica counts then adding ammunition totals
+
+  - title: Personnel Activity Table
+    type: task-group
+    description: "Incidents and total ammunition used per officer who discharged a weapon."
+    tasks:
+
+      # Split all_weapon_uses by event type for per-type shooter counts.
+      # Either filter can return 0 rows when that event type had no weapon use in the period.
+      # skipif allows empty so the outer merge below still runs and fills the missing type with 0.
+      - name: Filter Agresion Weapon Uses
+        id: agresion_weapon_uses
+        task: filter_row_values
+        skipif:
+          conditions:
+            - any_dependency_skipped
+        partial:
+          df: ${{ workflow.all_weapon_uses.return }}
+          column: event_type
+          values:
+            - amenazas_funcionario
+
+      - name: Filter Exotica Weapon Uses
+        id: exotica_weapon_uses
+        task: filter_row_values
+        skipif:
+          conditions:
+            - any_dependency_skipped
+        partial:
+          df: ${{ workflow.all_weapon_uses.return }}
+          column: event_type
+          values:
+            - animal_exotico
+
+      # Agresion events per shooter
+      - name: Count Agresion Events per Shooter
+        id: agresion_per_tirador
+        task: summarize_df
+        skipif:
+          conditions:
+            - any_dependency_skipped
+        partial:
+          df: ${{ workflow.agresion_weapon_uses.return }}
+          groupby_cols:
+            - tirador_name
+          reset_index: true
+          summary_params:
+            - display_name: "Agresiones"
+              aggregator: nunique
+              column: serial_number
+              decimal_places: 0
+
+      # Exotica events per shooter
+      - name: Count Exotica Events per Shooter
+        id: exotica_per_tirador
+        task: summarize_df
+        skipif:
+          conditions:
+            - any_dependency_skipped
+        partial:
+          df: ${{ workflow.exotica_weapon_uses.return }}
+          groupby_cols:
+            - tirador_name
+          reset_index: true
+          summary_params:
+            - display_name: "Exóticos"
+              aggregator: nunique
+              column: serial_number
+              decimal_places: 0
+
+      # Total ammunition per shooter (both types combined)
+      - name: Sum Ammunition per Shooter
+        id: ammo_per_tirador
+        task: summarize_df
+        partial:
+          df: ${{ workflow.all_weapon_uses.return }}
+          groupby_cols:
+            - tirador_name
+          reset_index: true
+          summary_params:
+            - display_name: "Total municiones"
+              aggregator: sum
+              column: cantidad_municiones
+              decimal_places: 0
+
+      # Merge agresion + exotica counts — outer join so shooters present in only one type are kept.
+      # skipif allows empty left side (no agresion events); result will just be the exotica rows.
+      - name: Merge Agresion and Exotica Counts
+        id: personnel_merge1
+        task: merge_two_dataframes
+        skipif:
+          conditions:
+            - any_dependency_skipped
+        partial:
+          left: ${{ workflow.agresion_per_tirador.return }}
+          right: ${{ workflow.exotica_per_tirador.return }}
+          on: tirador_name
+          how: outer
+          left_on: null
+          right_on: null
+          left_index: false
+          right_index: false
+          fillna_value: null
+
+      # Merge in ammo totals
+      - name: Merge in Ammunition Totals
+        id: personnel_merge2
+        task: merge_two_dataframes
+        partial:
+          left: ${{ workflow.personnel_merge1.return }}
+          right: ${{ workflow.ammo_per_tirador.return }}
+          on: tirador_name
+          how: outer
+          left_on: null
+          right_on: null
+          left_index: false
+          right_index: false
+          fillna_value: null
+
+      # Fill NaN counts with 0 (shooters who appear in only one event type)
+      - name: Fill Null Counts
+        id: personnel_filled
+        task: fill_numeric_nulls
+        partial:
+          df: ${{ workflow.personnel_merge2.return }}
+          columns:
+            - Agresiones
+            - "Exóticos"
+            - "Total municiones"
+          value: 0.0
+
+      # Add total column (Agresiones + Exóticos)
+      - name: Compute Total Events per Shooter
+        id: personnel_total
+        task: apply_arithmetic_operation_over_rows
+        partial:
+          df: ${{ workflow.personnel_filled.return }}
+          column_a: Agresiones
+          column_b: "Exóticos"
+          output_column: Total
+          operation: add
+
+      # Rename and reorder for display
+      - name: Rename Personnel Table Columns
+        id: personnel_columns
+        task: map_columns
+        partial:
+          df: ${{ workflow.personnel_total.return }}
+          raise_if_not_found: false
+          retain_columns:
+            - tirador_name
+            - Agresiones
+            - "Exóticos"
+            - Total
+            - "Total municiones"
+          drop_columns: null
+          rename_columns:
+            tirador_name: "Tirador"
+
+      - id: personnel_table
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.personnel_columns.return }}
+
+      - name: Fix Personnel Table Headers
+        id: personnel_table_fixed
+        task: preserve_table_headers
+        partial:
+          html: ${{ workflow.personnel_table.return }}
+
+      - name: Persist Personnel Table
+        id: personnel_table_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.personnel_table_fixed.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: personnel_table
+
+      - name: Create Widget for Personnel Table
+        id: personnel_table_sv
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Actividad del personal"
+          data: ${{ workflow.personnel_table_html.return }}
+
+  # Agresion-specific analysis: weapons drawn count and injury details
+
+  - title: Agresion Breakdown
+    type: task-group
+    description: "Details specific to 'Agresión / amenaza a funcionario' events."
+    tasks:
+
+      # Count events where the officer needed to draw their weapon (necesidad_desfundar field)
+      - name: Extract Necesidad de Desfundar
+        id: extract_desfundar
+        task: extract_value_from_json_column
+        partial:
+          df: ${{ workflow.processed_agresion.return }}
+          column_name: event_details
+          field_name_options:
+            - necesidad_desfundar
+          output_column_name: necesidad_desfundar
+          output_type: str
+
+      # Filter to events where officer drew their weapon (value is "Sí" after display-value resolution)
+      - name: Filter Events Where Weapon Was Drawn
+        id: filter_desfundar
+        task: filter_row_values
+        partial:
+          df: ${{ workflow.extract_desfundar.return }}
+          column: necesidad_desfundar
+          values:
+            - "Sí"
+            - "yes"
+            - "si"
+            - "Si"
+
+      - name: Count Weapons Drawn
+        id: count_desfundar
+        task: dataframe_count
+        partial:
+          df: ${{ workflow.filter_desfundar.return }}
+
+      - name: Create Widget for Weapons Drawn Count
+        id: count_desfundar_sv
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Necesidad de desfundar el arma"
+          decimal_places: 0
+          data: ${{ workflow.count_desfundar.return }}
+
+      # Injuries table: explode lesiones_sufridas array into one row per injury type with its description
+      - name: Extract Lesion Description
+        id: extract_lesion_desc
+        task: extract_value_from_json_column
+        partial:
+          df: ${{ workflow.processed_agresion.return }}
+          column_name: event_details
+          field_name_options:
+            - descripcion_lesiones
+          output_column_name: descripcion_lesiones
+          output_type: str
+
+      # Count lesions array length to find events with injuries
+      - name: Count Lesiones per Event
+        id: lesiones_count
+        task: extract_array_length_from_json_column
+        partial:
+          df: ${{ workflow.extract_lesion_desc.return }}
+          column_name: event_details
+          field_name: lesiones_sufridas
+          output_column_name: lesiones_count
+
+      # Keep only events that have at least one recorded injury
+      - name: Filter Events with Lesiones
+        id: events_with_lesiones
+        task: filter_numeric_gt
+        partial:
+          df: ${{ workflow.lesiones_count.return }}
+          column_name: lesiones_count
+          value: 0.0
+          reset_index: true
+
+      # Explode lesiones_sufridas array: one row per injury type
+      - name: Explode Lesiones Sufridas
+        id: exploded_lesiones
+        task: explode_json_array_column
+        partial:
+          df: ${{ workflow.events_with_lesiones.return }}
+          json_column: event_details
+          array_field: lesiones_sufridas
+          parent_columns:
+            - time
+            - serial_number
+            - descripcion_lesiones
+
+      - name: Rename Lesiones Table Columns
+        id: lesiones_columns
+        task: map_columns
+        partial:
+          df: ${{ workflow.exploded_lesiones.return }}
+          raise_if_not_found: false
+          retain_columns:
+            - time
+            - lesiones_sufridas
+            - descripcion_lesiones
+          drop_columns: null
+          rename_columns:
+            time: "Fecha y hora"
+            lesiones_sufridas: "Tipo de lesión"
+            descripcion_lesiones: "Descripción"
+
+      - id: lesiones_table
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.lesiones_columns.return }}
+
+      - name: Fix Lesiones Table Headers
+        id: lesiones_table_fixed
+        task: preserve_table_headers
+        partial:
+          html: ${{ workflow.lesiones_table.return }}
+
+      - name: Persist Lesiones Table
+        id: lesiones_table_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.lesiones_table_fixed.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: lesiones_table
+
+      - name: Create Widget for Lesiones Table
+        id: lesiones_table_sv
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Lesiones sufridas"
+          data: ${{ workflow.lesiones_table_html.return }}
+
+  # Exotica-specific analysis: control action outcomes and animals killed by species
+
+  - title: Exotica Breakdown
+    type: task-group
+    description: "Details specific to 'Exótica Animal' events."
+    tasks:
+
+      # Explode accion_control (multi-select field) into one row per outcome, then count each
+      # Use weapon_exotica so only events with actual weapon use are counted
+      - name: Explode Accion de Control
+        id: exploded_accion
+        task: explode_json_array_column
+        partial:
+          df: ${{ workflow.weapon_exotica.return }}
+          json_column: event_details
+          array_field: accion_control
+          parent_columns:
+            - serial_number
+
+      # Count occurrences of each accion_control outcome
+      - name: Count Accion de Control Outcomes
+        id: accion_counts
+        task: summarize_df
+        partial:
+          df: ${{ workflow.exploded_accion.return }}
+          groupby_cols:
+            - accion_control
+          reset_index: true
+          summary_params:
+            - display_name: "Cantidad"
+              aggregator: count
+              column: serial_number
+              decimal_places: 0
+
+      # Draw doughnut chart (hole=0.5)
+      - name: Draw Accion de Control Doughnut Chart
+        id: accion_doughnut
+        task: draw_doughnut_chart
+        partial:
+          dataframe: ${{ workflow.accion_counts.return }}
+          value_column: "Cantidad"
+          label_column: accion_control
+          color_palette: ${{ workflow.plot_palette.return }}
+          hole: 0.5
+          layout_style:
+
+      - name: Persist Accion Doughnut
+        id: accion_doughnut_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.accion_doughnut.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: accion_doughnut
+
+      - name: Create Widget for Accion Doughnut
+        id: accion_doughnut_sv
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Resultado de acción de control"
+          data: ${{ workflow.accion_doughnut_html.return }}
+
+      # Aggregate animals killed by species; only events with abatidos_count > 0 are included
+      - name: Extract Especie Exotica
+        id: extract_especie
+        task: extract_value_from_json_column
+        partial:
+          df: ${{ workflow.abatidos_per_event.return }}
+          column_name: event_details
+          field_name_options:
+            - especie_exotica
+          output_column_name: especie_exotica
+          output_type: str
+
+      # Keep only events where animals were killed
+      - name: Filter Events with Abatidos
+        id: filter_abatidos
+        task: filter_numeric_gt
+        partial:
+          df: ${{ workflow.extract_especie.return }}
+          column_name: abatidos_count
+          value: 0.0
+          reset_index: true
+
+      # Aggregate animals killed by species
+      - name: Count Animals Killed by Species
+        id: species_killed
+        task: summarize_df
+        partial:
+          df: ${{ workflow.filter_abatidos.return }}
+          groupby_cols:
+            - especie_exotica
+          reset_index: true
+          summary_params:
+            - display_name: "Animales abatidos"
+              aggregator: sum
+              column: abatidos_count
+              decimal_places: 0
+
+      - name: Draw Species Killed Bar Chart
+        id: species_chart
+        task: draw_bar_chart_colored
+        partial:
+          dataframe: ${{ workflow.species_killed.return }}
+          x_axis: especie_exotica
+          y_axis: "Animales abatidos"
+          color_palette: ${{ workflow.plot_palette.return }}
+          text_template: "%{y:.0f}"
+          layout_style:
+            showlegend: false
+            hovermode: "x"
+            xaxis:
+              title: "Especie"
+            yaxis:
+              title: "Cantidad abatida"
+            bargap: 0.2
+
+      - name: Persist Species Chart
+        id: species_chart_html
+        task: persist_text
+        partial:
+          text: ${{ workflow.species_chart.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: species_chart
+
+      - name: Create Widget for Species Chart
+        id: species_chart_sv
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Animales abatidos por especie"
+          data: ${{ workflow.species_chart_html.return }}
+
+  # Generate a styled HTML snapshot of all headline stat cards for offline use or reporting
+
+  - name: Generate Stat Cards HTML
+    id: stat_cards_html
+    task: generate_stat_cards_html
+    partial:
+      widgets:
+        - ${{ workflow.total_incidents_sv.return }}
+        - ${{ workflow.total_ammo_sv.return }}
+        - ${{ workflow.total_personnel_sv.return }}
+        - ${{ workflow.total_abatidos_sv.return }}
+        - ${{ workflow.count_desfundar_sv.return }}
+
+  - name: Persist Stat Cards HTML
+    id: stat_cards_html_file
+    task: persist_text
+    skipif:
+      conditions:
+        - never
+    partial:
+      text: ${{ workflow.stat_cards_html.return }}
+      root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+      filename_suffix: stat_cards
+
+  # Collect all widgets into the final dashboard; gather_apn_dashboard injects AllGrouper to keep Edit Layout visible
+
+  - name: Create Dashboard
+    id: dashboard
+    task: gather_apn_dashboard
+    partial:
+      details: ${{ workflow.workflow_details.return }}
+      widgets:
+        # Headline stat cards (row 1)
+        - ${{ workflow.total_incidents_sv.return }}
+        - ${{ workflow.total_ammo_sv.return }}
+        - ${{ workflow.total_personnel_sv.return }}
+        - ${{ workflow.total_abatidos_sv.return }}
+        # Geographic map
+        - ${{ workflow.weapon_map_widget.return }}
+        # Trend line charts
+        - ${{ workflow.incidents_trend_sv.return }}
+        - ${{ workflow.ammo_trend_sv.return }}
+        # Aggregate ammunition usage by type across all weapon-use entries
+        - ${{ workflow.ammo_table_sv.return }}
+        # Personnel table
+        - ${{ workflow.personnel_table_sv.return }}
+        # Agresion-specific analysis: weapons drawn count and injury details
+        - ${{ workflow.count_desfundar_sv.return }}
+        - ${{ workflow.lesiones_table_sv.return }}
+        # Exotica-specific analysis: control action outcomes and animals killed by species
+        - ${{ workflow.accion_doughnut_sv.return }}
+        - ${{ workflow.species_chart_sv.return }}
+      groupers: ${{ workflow.groupers.return }}
+      time_range: ${{ workflow.time_range.return }}

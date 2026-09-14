@@ -1,0 +1,37 @@
+all-grouper:
+  name: All Grouper
+  description: A demonstration of a workflow with no grouping.
+  params:
+    workflow_details:
+      description: ""
+      name: Weapon Use Summary
+    er_client:
+      data_source:
+        name: apn
+    time_range:
+      timezone:
+        label: America/Argentina/Buenos_Aires
+        tzCode: ART
+        name: Buenos Aires
+        utc: "-03:00"
+      since: "2026-01-01T00:00:00.000Z"
+      until: "2026-05-30T23:59:00.000Z"
+    weapon_events_colormap:
+      input_column_name: event_type_display
+      colormap: Set1
+      custom_colors:
+        - "#2196F3"
+        - "#FF5722"
+    time_interval_config:
+      time_interval: month
+    plot_palette:
+      colormap: Set2
+      custom_colors:
+        - "#2196F3"
+        - "#4CAF50"
+        - "#FF5722"
+        - "#9C27B0"
+        - "#FF9800"
+        - "#00BCD4"
+        - "#E91E63"
+        - "#8BC34A"

@@ -1,0 +1,15 @@
+name: Weapon Use Summary
+author:
+  name: ""
+  organization: APN
+  email: ""
+description: >
+  Operational report on firearm use by rangers of Argentina's national parks
+  agency (Administración de Parques Nacionales — APN). Covers weapon-use
+  incidents recorded on "Agresión / amenaza a funcionario" (assault/threat
+  against an officer) and "Exótica Animal" (invasive-species control) events:
+  incident and ammunition counts, personnel who discharged a weapon, injuries
+  sustained, control-action outcomes, and animals killed by species.
+theory: ""
+output_comment: ""
+citation: ""
