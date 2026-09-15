@@ -766,27 +766,6 @@
       "description": "Total ammunition rounds used, grouped by ammunition type.",
       "ecoscope:task_group": true,
       "properties": {
-        "ammo_table_columns": {
-          "additionalProperties": false,
-          "properties": {
-            "duplicate_strategy": {
-              "default": "suffix",
-              "enum": [
-                "suffix",
-                "skip",
-                "overwrite",
-                "error"
-              ],
-              "title": "Duplicate Strategy",
-              "type": "string",
-              "description": "Strategy for handling a rename whose new name is already taken. 'suffix': append _1, _2, etc. to the new name; 'skip': skip the rename, leaving the column under its original name; 'overwrite': replace the existing column; 'error': raise ValueError.",
-              "ecoscope:advanced": true
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": "Rename Ammo Table Columns"
-        },
         "ammo_table": {
           "additionalProperties": false,
           "properties": {
@@ -834,27 +813,6 @@
       "description": "Incidents and total ammunition used per officer who discharged a weapon.",
       "ecoscope:task_group": true,
       "properties": {
-        "personnel_columns": {
-          "additionalProperties": false,
-          "properties": {
-            "duplicate_strategy": {
-              "default": "suffix",
-              "enum": [
-                "suffix",
-                "skip",
-                "overwrite",
-                "error"
-              ],
-              "title": "Duplicate Strategy",
-              "type": "string",
-              "description": "Strategy for handling a rename whose new name is already taken. 'suffix': append _1, _2, etc. to the new name; 'skip': skip the rename, leaving the column under its original name; 'overwrite': replace the existing column; 'error': raise ValueError.",
-              "ecoscope:advanced": true
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": "Rename Personnel Table Columns"
-        },
         "personnel_table": {
           "additionalProperties": false,
           "properties": {
@@ -902,55 +860,6 @@
       "description": "Details specific to 'Agresi\u00f3n / amenaza a funcionario' events.",
       "ecoscope:task_group": true,
       "properties": {
-        "extract_desfundar": {
-          "additionalProperties": false,
-          "properties": {
-            "fan_out": {
-              "default": true,
-              "title": "Fan Out",
-              "type": "boolean",
-              "description": "Only used when output_type is 'series'. If true (default), expand the extracted collection into indexed columns prefixed by output_column_name. If false, store it as a list in a single output_column_name column."
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": "Extract Necesidad de Desfundar"
-        },
-        "extract_lesion_desc": {
-          "additionalProperties": false,
-          "properties": {
-            "fan_out": {
-              "default": true,
-              "title": "Fan Out",
-              "type": "boolean",
-              "description": "Only used when output_type is 'series'. If true (default), expand the extracted collection into indexed columns prefixed by output_column_name. If false, store it as a list in a single output_column_name column."
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": "Extract Lesion Description"
-        },
-        "lesiones_columns": {
-          "additionalProperties": false,
-          "properties": {
-            "duplicate_strategy": {
-              "default": "suffix",
-              "enum": [
-                "suffix",
-                "skip",
-                "overwrite",
-                "error"
-              ],
-              "title": "Duplicate Strategy",
-              "type": "string",
-              "description": "Strategy for handling a rename whose new name is already taken. 'suffix': append _1, _2, etc. to the new name; 'skip': skip the rename, leaving the column under its original name; 'overwrite': replace the existing column; 'error': raise ValueError.",
-              "ecoscope:advanced": true
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": "Rename Lesiones Table Columns"
-        },
         "lesiones_table": {
           "additionalProperties": false,
           "properties": {
@@ -990,27 +899,6 @@
           "required": [],
           "type": "object",
           "title": ""
-        }
-      }
-    },
-    "Exotica Breakdown": {
-      "type": "object",
-      "description": "Details specific to 'Ex\u00f3tica Animal' events.",
-      "ecoscope:task_group": true,
-      "properties": {
-        "extract_especie": {
-          "additionalProperties": false,
-          "properties": {
-            "fan_out": {
-              "default": true,
-              "title": "Fan Out",
-              "type": "boolean",
-              "description": "Only used when output_type is 'series'. If true (default), expand the extracted collection into indexed columns prefixed by output_column_name. If false, store it as a list in a single output_column_name column."
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": "Extract Especie Exotica"
         }
       }
     }
@@ -1584,10 +1472,6 @@
       }
     },
     "Ammunition Summary Table": {
-      "ui:order": [
-        "ammo_table_columns",
-        "ammo_table"
-      ],
       "ammo_table": {
         "ui:order": [
           "columns",
@@ -1596,10 +1480,6 @@
       }
     },
     "Personnel Activity Table": {
-      "ui:order": [
-        "personnel_columns",
-        "personnel_table"
-      ],
       "personnel_table": {
         "ui:order": [
           "columns",
@@ -1608,12 +1488,6 @@
       }
     },
     "Agresion Breakdown": {
-      "ui:order": [
-        "extract_desfundar",
-        "extract_lesion_desc",
-        "lesiones_columns",
-        "lesiones_table"
-      ],
       "lesiones_table": {
         "ui:order": [
           "columns",
@@ -1634,8 +1508,7 @@
       "Trends Over Time",
       "Ammunition Summary Table",
       "Personnel Activity Table",
-      "Agresion Breakdown",
-      "Exotica Breakdown"
+      "Agresion Breakdown"
     ]
   },
   "additionalProperties": false

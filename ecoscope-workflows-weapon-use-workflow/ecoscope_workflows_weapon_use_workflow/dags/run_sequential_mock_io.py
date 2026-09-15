@@ -1215,6 +1215,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             retain_columns=None,
             drop_columns=None,
             rename_columns={"tipo_municion": "Tipo de munición"},
+            duplicate_strategy="suffix",
             **(params.get("ammo_table_columns") or {}),
         )
         .call()
@@ -1552,6 +1553,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             ],
             drop_columns=None,
             rename_columns={"tirador_name": "Tirador"},
+            duplicate_strategy="suffix",
             **(params.get("personnel_columns") or {}),
         )
         .call()
@@ -1652,6 +1654,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             field_name_options=["necesidad_desfundar"],
             output_column_name="necesidad_desfundar",
             output_type="str",
+            fan_out=True,
             **(params.get("extract_desfundar") or {}),
         )
         .call()
@@ -1736,6 +1739,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             field_name_options=["descripcion_lesiones"],
             output_column_name="descripcion_lesiones",
             output_type="str",
+            fan_out=True,
             **(params.get("extract_lesion_desc") or {}),
         )
         .call()
@@ -1833,6 +1837,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
                 "lesiones_sufridas": "Tipo de lesión",
                 "descripcion_lesiones": "Descripción",
             },
+            duplicate_strategy="suffix",
             **(params.get("lesiones_columns") or {}),
         )
         .call()
@@ -2053,6 +2058,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             field_name_options=["especie_exotica"],
             output_column_name="especie_exotica",
             output_type="str",
+            fan_out=True,
             **(params.get("extract_especie") or {}),
         )
         .call()
