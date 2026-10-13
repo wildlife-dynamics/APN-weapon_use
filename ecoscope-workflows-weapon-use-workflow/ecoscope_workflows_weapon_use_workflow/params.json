@@ -614,6 +614,20 @@
       "required": [],
       "type": "object",
       "title": ""
+    },
+    "get_template_path": {
+      "additionalProperties": false,
+      "properties": {
+        "var": {
+          "title": "",
+          "type": "string"
+        }
+      },
+      "required": [
+        "var"
+      ],
+      "type": "object",
+      "title": "Get Report Template Path"
     }
   },
   "$defs": {
@@ -1162,7 +1176,8 @@
       "time_interval_config",
       "ammo_table",
       "personnel_table",
-      "lesiones_table"
+      "lesiones_table",
+      "get_template_path"
     ]
   },
   "additionalProperties": false

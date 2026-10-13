@@ -5,23 +5,23 @@
 
 ```yaml
 # fingerprint:
-artifacts_sha256_basic: 1ec1fe5db7393818e1306c049314a6b10fbd675977eee97e2c03226ab028b3c9
-artifacts_sha256_strict: 13c632ad500dab5f9098d773d774fcc83a8b84a03d024acefa9e1833574c3728
+artifacts_sha256_basic: 12aa71fe61f6d712b4a56bd2965536c497263fe3e6eccc0d6ee161941444fdf0
+artifacts_sha256_strict: b0d984e43828b06801c0e9ad4d2f6df9f1f9614ba7ecf32a94d66ad2b897b0ff
 installed_requirements:
 - channel: https://repo.prefix.dev/ecoscope-workflows/
   name: ecoscope-platform
-  version: {version: ==2.23.0}
+  version: {version: ==2.25.3}
 - channel: https://repo.prefix.dev/ecoscope-workflows-custom/
   name: ecoscope-workflows-ext-custom
   version: {version: ==0.1.0rc23}
 - channel: conda-forge
   name: pydeck
   version: {version: ==0.9.2}
-- channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+- channel: file:///tmp/ecoscope-workflows-custom/release/artifacts/
   name: ecoscope-workflows-ext-apn
-  version: {version: ==0.0.30}
-params_sha256: e7ef6e1be7ddd4419eb1b551845280d3bd818c8f2c071f6693a8e1493651ecf4
-spec_sha256: 5a3bd8e02c1c5cc0d001b11aff9b2e5c1ed120694ed914e101e19fe779ccb20b
+  version: {version: ==0.0.31.dev2+ge682ac27d}
+params_sha256: 1ad187c562a8e1432ba8c6cfee6294a602be5683ee6ba7d12150fcf4b6ac9308
+spec_sha256: 8cc44c5993933bc57d61801b7f337d3885bb41042782b44d9cf9e6c6603f3c98
 
 ```
 

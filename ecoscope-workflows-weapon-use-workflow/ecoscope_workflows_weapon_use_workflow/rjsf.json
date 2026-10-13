@@ -901,6 +901,20 @@
           "title": ""
         }
       }
+    },
+    "get_template_path": {
+      "additionalProperties": false,
+      "properties": {
+        "var": {
+          "title": "",
+          "type": "string"
+        }
+      },
+      "required": [
+        "var"
+      ],
+      "type": "object",
+      "title": "Get Report Template Path"
     }
   },
   "$defs": {
@@ -1508,7 +1522,8 @@
       "Trends Over Time",
       "Ammunition Summary Table",
       "Personnel Activity Table",
-      "Agresion Breakdown"
+      "Agresion Breakdown",
+      "get_template_path"
     ]
   },
   "additionalProperties": false

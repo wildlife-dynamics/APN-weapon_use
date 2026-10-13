@@ -39,3 +39,6 @@ plot_palette:
     - "#00BCD4"
     - "#E91E63"
     - "#8BC34A"
+
+get_template_path:
+  var: "/Users/zak/Documents/w-dynamics/APN-weapon_use/resources/templates/weapon_use_report_template.docx"

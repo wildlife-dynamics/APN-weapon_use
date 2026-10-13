@@ -109,6 +109,9 @@ from ecoscope_workflows_ext_apn.tasks import (
 from ecoscope_workflows_ext_apn.tasks import (
     generate_stat_cards_html as generate_stat_cards_html,
 )
+from ecoscope_workflows_ext_apn.tasks import (
+    generate_weapon_use_report as generate_weapon_use_report,
+)
 from ecoscope_workflows_ext_apn.tasks import get_time_interval as get_time_interval
 from ecoscope_workflows_ext_apn.tasks import (
     preserve_table_headers as preserve_table_headers,
@@ -116,8 +119,12 @@ from ecoscope_workflows_ext_apn.tasks import (
 from ecoscope_workflows_ext_custom.tasks.io import (
     get_spatial_features as get_spatial_features,
 )
+from ecoscope_workflows_ext_custom.tasks.io import html_to_png as html_to_png
 from ecoscope_workflows_ext_custom.tasks.io import (
     load_local_spatial_file as load_local_spatial_file,
+)
+from ecoscope_workflows_ext_custom.tasks.io import (
+    remove_file_scheme as remove_file_scheme,
 )
 from ecoscope_workflows_ext_custom.tasks.results import (
     create_spatial_features_layer as create_spatial_features_layer,
@@ -2233,6 +2240,116 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="stat_cards",
             **(params.get("stat_cards_html_file") or {}),
+        )
+        .call()
+    )
+
+    get_template_path = (
+        task(set_string_var)
+        .validate()
+        .set_task_instance_id("get_template_path")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(**(params.get("get_template_path") or {}))
+        .call()
+    )
+
+    norm_template_path = (
+        task(remove_file_scheme)
+        .validate()
+        .set_task_instance_id("norm_template_path")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(path=get_template_path, **(params.get("norm_template_path") or {}))
+        .call()
+    )
+
+    norm_output_dir = (
+        task(remove_file_scheme)
+        .validate()
+        .set_task_instance_id("norm_output_dir")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(
+            path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
+            **(params.get("norm_output_dir") or {}),
+        )
+        .call()
+    )
+
+    weapon_map_to_png = (
+        task(html_to_png)
+        .validate()
+        .set_task_instance_id("weapon_map_to_png")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(
+            html_path=weapon_map_html,
+            output_dir=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
+            config={"full_page": False},
+            **(params.get("weapon_map_to_png") or {}),
+        )
+        .call()
+    )
+
+    generate_word_doc = (
+        task(generate_weapon_use_report)
+        .validate()
+        .set_task_instance_id("generate_word_doc")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(
+            time_range=time_range,
+            total_incidents=total_incidents,
+            total_ammo=total_ammo,
+            total_personnel=total_personnel,
+            total_abatidos=total_abatidos,
+            count_desfundar=count_desfundar,
+            ammo_table=ammo_table_columns,
+            personnel_table=personnel_columns,
+            lesiones_table=lesiones_columns,
+            accion_table=accion_counts,
+            species_table=species_killed,
+            user_details=user_details,
+            template_path=norm_template_path,
+            output_dir=norm_output_dir,
+            mapa=weapon_map_to_png,
+            **(params.get("generate_word_doc") or {}),
         )
         .call()
     )
