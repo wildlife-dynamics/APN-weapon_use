@@ -351,6 +351,7 @@ workflow:
         task: add_weapon_counts  # adds uso_arma_count and abatidos_count from the current form fields
         partial:
           df: ${{ workflow.processed_events.return }}
+          client: ${{ workflow.er_client.return }}  # reads the calibre fields from the schema
       # Keep only events where a weapon was actually fired
       - name: Filter Events with Weapon Use
         id: weapon_events
@@ -377,6 +378,7 @@ workflow:
         task: weapon_uses_from_events
         partial:
           df: ${{ workflow.weapon_events.return }}
+          client: ${{ workflow.er_client.return }}  # reads the calibre fields from the schema
   # Headline statistics
 
   - title: Headline Statistics
