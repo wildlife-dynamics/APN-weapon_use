@@ -1273,21 +1273,17 @@ workflow:
     partial:
       path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
 
-  - name: Convert Weapon Use Map to PNG
-    id: weapon_map_to_png
-    task: html_to_png
-    partial:
-      html_path: ${{ workflow.weapon_map_html.return }}
-      output_dir: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
-      config:
-        full_page: false
-
+  # Convert every dashboard widget's underlying HTML to a PNG, in the exact order
+  # gather_apn_dashboard lists them below, so the DOCX report mirrors the dashboard.
   - title: Weapon Use Report
     type: task-group
-    description: "Generates a DOCX report of weapon-use incidents using only the tables and stats already computed above (no additional patrol/trajectory data is fetched)."
+    description: "Generates a DOCX report that mirrors the dashboard above: a real stats table plus the map, trend charts, and tables as images. Any single widget with no data for the period is simply omitted, not the whole report."
     tasks:
       - id: generate_word_doc
         task: generate_weapon_use_report
+        skipif:
+          conditions:
+            - never
         partial:
           time_range: ${{ workflow.time_range.return }}
           total_incidents: ${{ workflow.total_incidents.return }}
@@ -1295,15 +1291,17 @@ workflow:
           total_personnel: ${{ workflow.total_personnel.return }}
           total_abatidos: ${{ workflow.total_abatidos.return }}
           count_desfundar: ${{ workflow.count_desfundar.return }}
-          ammo_table: ${{ workflow.ammo_table_columns.return }}
-          personnel_table: ${{ workflow.personnel_columns.return }}
-          lesiones_table: ${{ workflow.lesiones_columns.return }}
-          accion_table: ${{ workflow.accion_counts.return }}
-          species_table: ${{ workflow.species_killed.return }}
           user_details: ${{ workflow.user_details.return }}
           template_path: ${{ workflow.norm_template_path.return }}
           output_dir: ${{ workflow.norm_output_dir.return }}
-          mapa: ${{ workflow.weapon_map_to_png.return }}
+          weapon_map_html: ${{ workflow.weapon_map_html.return }}
+          incidents_trend_html: ${{ workflow.incidents_trend_html.return }}
+          ammo_trend_html: ${{ workflow.ammo_trend_html.return }}
+          ammo_table: ${{ workflow.ammo_table_columns.return }}
+          personnel_table: ${{ workflow.personnel_columns.return }}
+          lesiones_table: ${{ workflow.lesiones_columns.return }}
+          accion_doughnut_html: ${{ workflow.accion_doughnut_html.return }}
+          species_chart_html: ${{ workflow.species_chart_html.return }}
 
   # Collect all widgets into the final dashboard; gather_apn_dashboard injects AllGrouper to keep Edit Layout visible
 
