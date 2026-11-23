@@ -345,17 +345,13 @@ workflow:
     description: "Filter events to those with actual weapon use and build combined dataset."
     tasks:
 
-      # Count uso_arma entries per event across both event types
+      # Weapon uses and animals killed per event (weapon details are flat fields now, not a uso_arma list)
       - name: Count Weapon Uses per Event
         id: uso_arma_count
-        task: extract_array_length_from_json_column
+        task: add_weapon_counts  # adds uso_arma_count and abatidos_count from the current form fields
         partial:
           df: ${{ workflow.processed_events.return }}
-          column_name: event_details
-          field_name: uso_arma
-          output_column_name: uso_arma_count
-
-      # Keep only events where weapon was actually fired (uso_arma array is non-empty)
+      # Keep only events where a weapon was actually fired
       - name: Filter Events with Weapon Use
         id: weapon_events
         task: filter_numeric_gt
@@ -375,35 +371,12 @@ workflow:
           values:
             - animal_exotico
 
-      # Explode uso_arma across ALL weapon events together (both types in one pass).
-      # Splitting before exploding caused a cascade skip when one event type was absent:
-      # empty weapon_agresion → skip → skip → all_weapon_uses skipped → tables empty.
-      # Exploding together avoids this — all_weapon_uses is non-empty whenever weapon_events has rows.
-      - name: Explode All Weapon Uses
-        id: exploded_weapon_uses
-        task: explode_json_array_column
+      # One row per weapon use: shooter (tirador_name), calibre (tipo_municion), kind of shot, rounds
+      - name: Weapon Uses
+        id: all_weapon_uses
+        task: weapon_uses_from_events
         partial:
           df: ${{ workflow.weapon_events.return }}
-          json_column: event_details
-          array_field: uso_arma
-          parent_columns:
-            - time
-            - serial_number
-            - event_type
-            - event_type_display
-
-      # Agresion rows have 'tirador', exotica rows have 'nombre_tirador' — merge into one column
-      - name: Normalise Shooter Column
-        id: all_weapon_uses
-        task: consolidate_cols
-        partial:
-          df: ${{ workflow.exploded_weapon_uses.return }}
-          source_columns:
-            - tirador
-            - nombre_tirador
-          output_column: tirador_name
-          drop_sources: true
-
   # Headline statistics
 
   - title: Headline Statistics
@@ -468,20 +441,11 @@ workflow:
           data: ${{ workflow.total_personnel.return }}
 
       # Animals killed (Exótica only)
-      - name: Count Abatidos per Exotica Event
-        id: abatidos_per_event
-        task: extract_array_length_from_json_column
-        partial:
-          df: ${{ workflow.weapon_exotica.return }}
-          column_name: event_details
-          field_name: abatidos
-          output_column_name: abatidos_count
-
       - name: Sum Total Animals Killed
         id: total_abatidos
         task: dataframe_column_sum
         partial:
-          df: ${{ workflow.abatidos_per_event.return }}
+          df: ${{ workflow.weapon_exotica.return }}
           column_name: abatidos_count
 
       - name: Create Widget for Total Animals Killed
@@ -1166,7 +1130,7 @@ workflow:
         id: extract_especie
         task: extract_value_from_json_column
         partial:
-          df: ${{ workflow.abatidos_per_event.return }}
+          df: ${{ workflow.weapon_exotica.return }}
           column_name: event_details
           field_name_options:
             - especie_exotica
