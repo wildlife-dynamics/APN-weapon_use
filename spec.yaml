@@ -14,8 +14,8 @@ requirements:
     channel: conda-forge
 
   - name: ecoscope-workflows-ext-apn
-    version: "*"
-    channel: file:///tmp/ecoscope-workflows-custom/release/artifacts/
+    version: "0.0.33"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
 rjsf-overrides:
   properties:
@@ -581,17 +581,17 @@ workflow:
 
   - title: Trends Over Time
     type: task-group
-    description: "Line charts of incidents and ammunition use over time."
+    description: "Bar charts of incidents and ammunition use over time."
     tasks:
 
-      # Single time interval selector shared by both line charts
+      # Single time interval selector shared by both trend charts
       - id: time_interval_config
         task: get_time_interval
 
-      # Line chart: incidents per selected interval, one line per event type
-      - name: Draw Incidents Trend Line Chart
+      # Bar chart: incidents per selected interval, one bar per event type (a line with one or two points looks broken)
+      - name: Draw Incidents Trend Bar Chart
         id: incidents_trend_chart
-        task: draw_time_series_line_chart_grouped
+        task: draw_time_series_bar_chart_grouped
         partial:
           dataframe: ${{ workflow.weapon_events.return }}
           x_axis: time
@@ -624,13 +624,13 @@ workflow:
           conditions:
             - never
         partial:
-          title: "Uso de armamento por mes"
+          title: "Uso de armamento en el tiempo"
           data: ${{ workflow.incidents_trend_html.return }}
 
-      # Line chart: ammunition used per selected interval, one line per event type
-      - name: Draw Ammunition Trend Line Chart
+      # Bar chart: ammunition used per selected interval, one bar per event type
+      - name: Draw Ammunition Trend Bar Chart
         id: ammo_trend_chart
-        task: draw_time_series_line_chart_grouped
+        task: draw_time_series_bar_chart_grouped
         partial:
           dataframe: ${{ workflow.all_weapon_uses.return }}
           x_axis: time
@@ -663,7 +663,7 @@ workflow:
           conditions:
             - never
         partial:
-          title: "Uso de municiones por mes"
+          title: "Uso de municiones en el tiempo"
           data: ${{ workflow.ammo_trend_html.return }}
 
   # Aggregate ammunition usage by type across all weapon-use entries
@@ -1240,7 +1240,7 @@ workflow:
       path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
 
   # Convert every dashboard widget's underlying HTML to a PNG, in the exact order
-  # gather_apn_dashboard lists them below, so the DOCX report mirrors the dashboard.
+  # gather_dashboard lists them below, so the DOCX report mirrors the dashboard.
   - title: Weapon Use Report
     type: task-group
     description: "Generates a DOCX report that mirrors the dashboard above: a real stats table plus the map, trend charts, and tables as images. Any single widget with no data for the period is simply omitted, not the whole report."
@@ -1269,11 +1269,19 @@ workflow:
           accion_doughnut_html: ${{ workflow.accion_doughnut_html.return }}
           species_chart_html: ${{ workflow.species_chart_html.return }}
 
-  # Collect all widgets into the final dashboard; gather_apn_dashboard injects AllGrouper to keep Edit Layout visible
+  # Collect all widgets and the Word report into the final dashboard
+
+  # the Word report, offered for download with the dashboard (as in APN-patrol_event)
+  - name: Report files
+    id: report_files
+    task: create_files_single_view
+    partial:
+      files:
+        - ${{ workflow.generate_word_doc.return }}
 
   - name: Create Dashboard
     id: dashboard
-    task: gather_apn_dashboard
+    task: gather_dashboard
     partial:
       details: ${{ workflow.workflow_details.return }}
       widgets:
@@ -1299,3 +1307,4 @@ workflow:
         - ${{ workflow.species_chart_sv.return }}
       groupers: ${{ workflow.groupers.return }}
       time_range: ${{ workflow.time_range.return }}
+      files: ${{ workflow.report_files.return }}

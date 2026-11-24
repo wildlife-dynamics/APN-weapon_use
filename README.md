@@ -12,15 +12,15 @@ Operational report on firearm use by rangers of Argentina's national parks agenc
 | Animales abatidos (Exótica) | Total animals killed, from Exótica events |
 | Necesidad de desfundar el arma | Count of Agresión incidents where the officer needed to draw their weapon |
 | Mapa de incidentes | Every weapon-use incident plotted at its recorded coordinates. Groupby setting colors points by event type, event ID, or another attribute |
-| Uso de armamento por mes | Line chart of incident count over time, one line per event type |
-| Uso de municiones por mes | Line chart of ammunition used over time, one line per event type |
+| Uso de armamento en el tiempo | Bar chart of incident count over time, one bar per event type |
+| Uso de municiones en el tiempo | Bar chart of ammunition used over time, one bar per event type |
 | Uso de munición por tipo | Table: event count and total rounds used, grouped by ammunition type |
 | Actividad del personal | Table: per-officer breakdown of Agresión incidents, Exótica incidents, total incidents, and total ammunition used |
 | Lesiones sufridas | Table of injuries recorded on Agresión events (date/time, injury type, description) — one row per injury |
 | Resultado de acción de control | Doughnut chart of control-action outcomes recorded on Exótica events |
 | Animales abatidos por especie | Bar chart of animals killed, grouped by species (Exótica events only) |
 
-This workflow has no groupers — all widgets show totals for the configured time range in a single dashboard view. The "Uso de armamento por mes" / "Uso de municiones por mes" trend charts and their time bucketing (day/week/month) are configurable via the Time Interval setting.
+This workflow has no groupers — all widgets show totals for the configured time range in a single dashboard view. The "Uso de armamento en el tiempo" / "Uso de municiones en el tiempo" trend charts and their time bucketing (day/week/month) are configurable via the Time Interval setting.
 
 ## Event types
 
