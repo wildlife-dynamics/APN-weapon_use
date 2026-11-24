@@ -25,6 +25,9 @@ from ecoscope.platform.tasks.io import persist_text as persist_text
 from ecoscope.platform.tasks.io import process_events_details as process_events_details
 from ecoscope.platform.tasks.io import set_er_connection as set_er_connection
 from ecoscope.platform.tasks.results import (
+    create_files_single_view as create_files_single_view,
+)
+from ecoscope.platform.tasks.results import (
     create_map_widget_single_view as create_map_widget_single_view,
 )
 from ecoscope.platform.tasks.results import (
@@ -38,6 +41,7 @@ from ecoscope.platform.tasks.results import (
 )
 from ecoscope.platform.tasks.results import draw_map as draw_map
 from ecoscope.platform.tasks.results import draw_table as draw_table
+from ecoscope.platform.tasks.results import gather_dashboard as gather_dashboard
 from ecoscope.platform.tasks.results import set_base_maps as set_base_maps
 from ecoscope.platform.tasks.results import (
     view_state_from_layers as view_state_from_layers,
@@ -57,19 +61,19 @@ from ecoscope.platform.tasks.transformation import map_columns as map_columns
 from ecoscope_workflows_ext_apn.tasks import (
     add_fullscreen_to_map as add_fullscreen_to_map,
 )
+from ecoscope_workflows_ext_apn.tasks import add_weapon_counts as add_weapon_counts
 from ecoscope_workflows_ext_apn.tasks import (
     apply_qualitative_color_map as apply_qualitative_color_map,
 )
 from ecoscope_workflows_ext_apn.tasks import (
     collect_optional_layers as collect_optional_layers,
 )
-from ecoscope_workflows_ext_apn.tasks import consolidate_cols as consolidate_cols
 from ecoscope_workflows_ext_apn.tasks import (
     draw_bar_chart_colored as draw_bar_chart_colored,
 )
 from ecoscope_workflows_ext_apn.tasks import draw_doughnut_chart as draw_doughnut_chart
 from ecoscope_workflows_ext_apn.tasks import (
-    draw_time_series_line_chart_grouped as draw_time_series_line_chart_grouped,
+    draw_time_series_bar_chart_grouped as draw_time_series_bar_chart_grouped,
 )
 from ecoscope_workflows_ext_apn.tasks import (
     explode_json_array_column as explode_json_array_column,
@@ -79,9 +83,6 @@ from ecoscope_workflows_ext_apn.tasks import (
 )
 from ecoscope_workflows_ext_apn.tasks import fill_numeric_nulls as fill_numeric_nulls
 from ecoscope_workflows_ext_apn.tasks import filter_numeric_gt as filter_numeric_gt
-from ecoscope_workflows_ext_apn.tasks import (
-    gather_apn_dashboard as gather_apn_dashboard,
-)
 from ecoscope_workflows_ext_apn.tasks import (
     generate_stat_cards_html as generate_stat_cards_html,
 )
@@ -94,10 +95,12 @@ from ecoscope_workflows_ext_apn.tasks import (
     preserve_table_headers as preserve_table_headers,
 )
 from ecoscope_workflows_ext_apn.tasks import set_color_palette as set_color_palette
+from ecoscope_workflows_ext_apn.tasks import (
+    weapon_uses_from_events as weapon_uses_from_events,
+)
 from ecoscope_workflows_ext_custom.tasks.io import (
     get_spatial_features as get_spatial_features,
 )
-from ecoscope_workflows_ext_custom.tasks.io import html_to_png as html_to_png
 from ecoscope_workflows_ext_custom.tasks.io import (
     load_local_spatial_file as load_local_spatial_file,
 )
@@ -404,7 +407,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
     )
 
     uso_arma_count = (
-        task(extract_array_length_from_json_column)
+        task(add_weapon_counts)
         .validate()
         .set_task_instance_id("uso_arma_count")
         .handle_errors()
@@ -418,9 +421,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
         )
         .partial(
             df=processed_events,
-            column_name="event_details",
-            field_name="uso_arma",
-            output_column_name="uso_arma_count",
+            client=er_client,
             **(params.get("uso_arma_count") or {}),
         )
         .call()
@@ -471,36 +472,8 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
         .call()
     )
 
-    exploded_weapon_uses = (
-        task(explode_json_array_column)
-        .validate()
-        .set_task_instance_id("exploded_weapon_uses")
-        .handle_errors()
-        .with_tracing()
-        .skipif(
-            conditions=[
-                any_is_empty_df,
-                any_dependency_skipped,
-            ],
-            unpack_depth=1,
-        )
-        .partial(
-            df=weapon_events,
-            json_column="event_details",
-            array_field="uso_arma",
-            parent_columns=[
-                "time",
-                "serial_number",
-                "event_type",
-                "event_type_display",
-            ],
-            **(params.get("exploded_weapon_uses") or {}),
-        )
-        .call()
-    )
-
     all_weapon_uses = (
-        task(consolidate_cols)
+        task(weapon_uses_from_events)
         .validate()
         .set_task_instance_id("all_weapon_uses")
         .handle_errors()
@@ -513,11 +486,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            df=exploded_weapon_uses,
-            source_columns=["tirador", "nombre_tirador"],
-            output_column="tirador_name",
-            drop_sources=True,
-            **(params.get("all_weapon_uses") or {}),
+            df=weapon_events, client=er_client, **(params.get("all_weapon_uses") or {})
         )
         .call()
     )
@@ -644,29 +613,6 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
         .call()
     )
 
-    abatidos_per_event = (
-        task(extract_array_length_from_json_column)
-        .validate()
-        .set_task_instance_id("abatidos_per_event")
-        .handle_errors()
-        .with_tracing()
-        .skipif(
-            conditions=[
-                any_is_empty_df,
-                any_dependency_skipped,
-            ],
-            unpack_depth=1,
-        )
-        .partial(
-            df=weapon_exotica,
-            column_name="event_details",
-            field_name="abatidos",
-            output_column_name="abatidos_count",
-            **(params.get("abatidos_per_event") or {}),
-        )
-        .call()
-    )
-
     total_abatidos = (
         task(dataframe_column_sum)
         .validate()
@@ -681,7 +627,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            df=abatidos_per_event,
+            df=weapon_exotica,
             column_name="abatidos_count",
             **(params.get("total_abatidos") or {}),
         )
@@ -999,7 +945,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
     )
 
     incidents_trend_chart = (
-        task(draw_time_series_line_chart_grouped)
+        task(draw_time_series_bar_chart_grouped)
         .validate()
         .set_task_instance_id("incidents_trend_chart")
         .handle_errors()
@@ -1066,7 +1012,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            title="Uso de armamento por mes",
+            title="Uso de armamento en el tiempo",
             data=incidents_trend_html,
             **(params.get("incidents_trend_sv") or {}),
         )
@@ -1074,7 +1020,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
     )
 
     ammo_trend_chart = (
-        task(draw_time_series_line_chart_grouped)
+        task(draw_time_series_bar_chart_grouped)
         .validate()
         .set_task_instance_id("ammo_trend_chart")
         .handle_errors()
@@ -1141,7 +1087,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            title="Uso de municiones por mes",
+            title="Uso de municiones en el tiempo",
             data=ammo_trend_html,
             **(params.get("ammo_trend_sv") or {}),
         )
@@ -2041,7 +1987,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            df=abatidos_per_event,
+            df=weapon_exotica,
             column_name="event_details",
             field_name_options=["especie_exotica"],
             output_column_name="especie_exotica",
@@ -2279,28 +2225,6 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
         .call()
     )
 
-    weapon_map_to_png = (
-        task(html_to_png)
-        .validate()
-        .set_task_instance_id("weapon_map_to_png")
-        .handle_errors()
-        .with_tracing()
-        .skipif(
-            conditions=[
-                any_is_empty_df,
-                any_dependency_skipped,
-            ],
-            unpack_depth=1,
-        )
-        .partial(
-            html_path=weapon_map_html,
-            output_dir=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
-            config={"full_page": False},
-            **(params.get("weapon_map_to_png") or {}),
-        )
-        .call()
-    )
-
     generate_word_doc = (
         task(generate_weapon_use_report)
         .validate()
@@ -2309,8 +2233,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
         .with_tracing()
         .skipif(
             conditions=[
-                any_is_empty_df,
-                any_dependency_skipped,
+                never,
             ],
             unpack_depth=1,
         )
@@ -2321,22 +2244,41 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             total_personnel=total_personnel,
             total_abatidos=total_abatidos,
             count_desfundar=count_desfundar,
-            ammo_table=ammo_table_columns,
-            personnel_table=personnel_columns,
-            lesiones_table=lesiones_columns,
-            accion_table=accion_counts,
-            species_table=species_killed,
             user_details=user_details,
             template_path=norm_template_path,
             output_dir=norm_output_dir,
-            mapa=weapon_map_to_png,
+            weapon_map_html=weapon_map_html,
+            incidents_trend_html=incidents_trend_html,
+            ammo_trend_html=ammo_trend_html,
+            ammo_table=ammo_table_columns,
+            personnel_table=personnel_columns,
+            lesiones_table=lesiones_columns,
+            accion_doughnut_html=accion_doughnut_html,
+            species_chart_html=species_chart_html,
             **(params.get("generate_word_doc") or {}),
         )
         .call()
     )
 
+    report_files = (
+        task(create_files_single_view)
+        .validate()
+        .set_task_instance_id("report_files")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(files=[generate_word_doc], **(params.get("report_files") or {}))
+        .call()
+    )
+
     dashboard = (
-        task(gather_apn_dashboard)
+        task(gather_dashboard)
         .validate()
         .set_task_instance_id("dashboard")
         .handle_errors()
@@ -2367,6 +2309,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             ],
             groupers=groupers,
             time_range=time_range,
+            files=report_files,
             **(params.get("dashboard") or {}),
         )
         .call()
