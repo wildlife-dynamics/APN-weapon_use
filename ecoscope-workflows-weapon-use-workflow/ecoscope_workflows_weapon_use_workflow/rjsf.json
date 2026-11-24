@@ -875,15 +875,18 @@
       "additionalProperties": false,
       "properties": {
         "var": {
-          "title": "",
-          "type": "string"
+          "title": "Template Path",
+          "type": "string",
+          "description": "Path or URL to the .docx template used for the report.",
+          "default": "https://raw.githubusercontent.com/wildlife-dynamics/APN-weapon_use/main/resources/templates/weapon_use_report_template.docx",
+          "ecoscope:advanced": true
         }
       },
       "required": [
         "var"
       ],
       "type": "object",
-      "title": "Get Report Template Path"
+      "title": "Report Template"
     }
   },
   "$defs": {

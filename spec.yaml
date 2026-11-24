@@ -14,11 +14,16 @@ requirements:
     channel: conda-forge
 
   - name: ecoscope-workflows-ext-apn
-    version: "0.0.33"
+    version: "0.0.34"
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
 rjsf-overrides:
   properties:
+    get_template_path.title: Report Template
+    get_template_path.properties.var.title: Template Path
+    get_template_path.properties.var.description: Path or URL to the .docx template used for the report.
+    get_template_path.properties.var.default: "https://raw.githubusercontent.com/wildlife-dynamics/APN-weapon_use/main/resources/templates/weapon_use_report_template.docx"
+    get_template_path.properties.var.ecoscope:advanced: true
     plot_palette.properties.colormap.description: "Select a color palette for all charts. Use Set1, Set2, or Dark2 for a small number of categories (up to 8). Use tab20, tab20b, or tab20c when you have many categories (up to 20)."
     plot_palette.properties.custom_colors.description: "Optional. Provide one hex color per category (e.g. #e41a1c, #377eb8). Leave empty to use the palette above."
     Map of Weapon-Use Incidents.properties.weapon_events_colormap.properties.input_column_name.title: Groupby
