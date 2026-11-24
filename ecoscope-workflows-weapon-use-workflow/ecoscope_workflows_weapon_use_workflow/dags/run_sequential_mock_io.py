@@ -1187,7 +1187,17 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             ],
             unpack_depth=1,
         )
-        .partial(dataframe=ammo_table_columns, **(params.get("ammo_table") or {}))
+        .partial(
+            dataframe=ammo_table_columns,
+            columns=None,
+            table_config={
+                "enable_sorting": True,
+                "enable_filtering": True,
+                "enable_download": True,
+                "hide_header": False,
+            },
+            **(params.get("ammo_table") or {}),
+        )
         .call()
     )
 
@@ -1525,7 +1535,17 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             ],
             unpack_depth=1,
         )
-        .partial(dataframe=personnel_columns, **(params.get("personnel_table") or {}))
+        .partial(
+            dataframe=personnel_columns,
+            columns=None,
+            table_config={
+                "enable_sorting": True,
+                "enable_filtering": True,
+                "enable_download": True,
+                "hide_header": False,
+            },
+            **(params.get("personnel_table") or {}),
+        )
         .call()
     )
 
@@ -1809,7 +1829,17 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             ],
             unpack_depth=1,
         )
-        .partial(dataframe=lesiones_columns, **(params.get("lesiones_table") or {}))
+        .partial(
+            dataframe=lesiones_columns,
+            columns=None,
+            table_config={
+                "enable_sorting": True,
+                "enable_filtering": True,
+                "enable_download": True,
+                "hide_header": False,
+            },
+            **(params.get("lesiones_table") or {}),
+        )
         .call()
     )
 
