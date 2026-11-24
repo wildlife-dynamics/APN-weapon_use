@@ -172,15 +172,6 @@ rjsf-overrides:
     Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.billboard.title: Billboard
     Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.billboard.description: Always face the marker toward the camera regardless of map tilt.
     Map of Weapon-Use Incidents.properties.weapon_map_layer.properties.layer_style.properties.billboard.ecoscope:advanced: true
-    Ammunition Summary Table.properties.ammo_table.properties.table_config.properties.enable_sorting.default: true
-    Ammunition Summary Table.properties.ammo_table.properties.table_config.properties.enable_filtering.default: true
-    Ammunition Summary Table.properties.ammo_table.properties.table_config.properties.enable_download.default: true
-    Personnel Activity Table.properties.personnel_table.properties.table_config.properties.enable_sorting.default: true
-    Personnel Activity Table.properties.personnel_table.properties.table_config.properties.enable_filtering.default: true
-    Personnel Activity Table.properties.personnel_table.properties.table_config.properties.enable_download.default: true
-    Agresion Breakdown.properties.lesiones_table.properties.table_config.properties.enable_sorting.default: true
-    Agresion Breakdown.properties.lesiones_table.properties.table_config.properties.enable_filtering.default: true
-    Agresion Breakdown.properties.lesiones_table.properties.table_config.properties.enable_download.default: true
     Spatial Features.properties.spatial_features.properties.source.default:
       query: null
     Local Spatial Features.properties.local_spatial_file.properties.layer.default: ""
@@ -712,6 +703,12 @@ workflow:
         task: draw_table
         partial:
           dataframe: ${{ workflow.ammo_table_columns.return }}
+          columns: null
+          table_config:
+            enable_sorting: true
+            enable_filtering: true
+            enable_download: true
+            hide_header: false
 
       - name: Fix Ammunition Table Headers
         id: ammo_table_fixed
@@ -901,6 +898,12 @@ workflow:
         task: draw_table
         partial:
           dataframe: ${{ workflow.personnel_columns.return }}
+          columns: null
+          table_config:
+            enable_sorting: true
+            enable_filtering: true
+            enable_download: true
+            hide_header: false
 
       - name: Fix Personnel Table Headers
         id: personnel_table_fixed
@@ -1043,6 +1046,12 @@ workflow:
         task: draw_table
         partial:
           dataframe: ${{ workflow.lesiones_columns.return }}
+          columns: null
+          table_config:
+            enable_sorting: true
+            enable_filtering: true
+            enable_download: true
+            hide_header: false
 
       - name: Fix Lesiones Table Headers
         id: lesiones_table_fixed

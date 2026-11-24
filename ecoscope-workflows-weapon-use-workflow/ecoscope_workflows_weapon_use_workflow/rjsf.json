@@ -742,135 +742,6 @@
         }
       }
     },
-    "Ammunition Summary Table": {
-      "type": "object",
-      "description": "Total ammunition rounds used, grouped by ammunition type.",
-      "ecoscope:task_group": true,
-      "properties": {
-        "ammo_table": {
-          "additionalProperties": false,
-          "properties": {
-            "columns": {
-              "default": null,
-              "description": "The list of dataframe columns to render in the table. Leave empty to render all columns",
-              "ecoscope:advanced": true,
-              "items": {
-                "type": "string"
-              },
-              "title": "Columns",
-              "type": "array"
-            },
-            "table_config": {
-              "$ref": "#/$defs/TableConfig",
-              "default": null,
-              "description": "Configuration options for the table.",
-              "ecoscope:advanced": true,
-              "title": "Table Config",
-              "properties": {
-                "enable_sorting": {
-                  "default": true
-                },
-                "enable_filtering": {
-                  "default": true
-                },
-                "enable_download": {
-                  "default": true
-                }
-              }
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": ""
-        }
-      }
-    },
-    "Personnel Activity Table": {
-      "type": "object",
-      "description": "Incidents and total ammunition used per officer who discharged a weapon.",
-      "ecoscope:task_group": true,
-      "properties": {
-        "personnel_table": {
-          "additionalProperties": false,
-          "properties": {
-            "columns": {
-              "default": null,
-              "description": "The list of dataframe columns to render in the table. Leave empty to render all columns",
-              "ecoscope:advanced": true,
-              "items": {
-                "type": "string"
-              },
-              "title": "Columns",
-              "type": "array"
-            },
-            "table_config": {
-              "$ref": "#/$defs/TableConfig",
-              "default": null,
-              "description": "Configuration options for the table.",
-              "ecoscope:advanced": true,
-              "title": "Table Config",
-              "properties": {
-                "enable_sorting": {
-                  "default": true
-                },
-                "enable_filtering": {
-                  "default": true
-                },
-                "enable_download": {
-                  "default": true
-                }
-              }
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": ""
-        }
-      }
-    },
-    "Agresion Breakdown": {
-      "type": "object",
-      "description": "Details specific to 'Agresi\u00f3n / amenaza a funcionario' events.",
-      "ecoscope:task_group": true,
-      "properties": {
-        "lesiones_table": {
-          "additionalProperties": false,
-          "properties": {
-            "columns": {
-              "default": null,
-              "description": "The list of dataframe columns to render in the table. Leave empty to render all columns",
-              "ecoscope:advanced": true,
-              "items": {
-                "type": "string"
-              },
-              "title": "Columns",
-              "type": "array"
-            },
-            "table_config": {
-              "$ref": "#/$defs/TableConfig",
-              "default": null,
-              "description": "Configuration options for the table.",
-              "ecoscope:advanced": true,
-              "title": "Table Config",
-              "properties": {
-                "enable_sorting": {
-                  "default": true
-                },
-                "enable_filtering": {
-                  "default": true
-                },
-                "enable_download": {
-                  "default": true
-                }
-              }
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": ""
-        }
-      }
-    },
     "get_template_path": {
       "additionalProperties": false,
       "properties": {
@@ -1326,32 +1197,6 @@
       },
       "title": "ScatterplotLayerStyle",
       "type": "object"
-    },
-    "TableConfig": {
-      "properties": {
-        "enable_sorting": {
-          "default": true,
-          "title": "Enable Sorting",
-          "type": "boolean"
-        },
-        "enable_filtering": {
-          "default": false,
-          "title": "Enable Filtering",
-          "type": "boolean"
-        },
-        "enable_download": {
-          "default": false,
-          "title": "Enable Download",
-          "type": "boolean"
-        },
-        "hide_header": {
-          "default": false,
-          "title": "Hide Header",
-          "type": "boolean"
-        }
-      },
-      "title": "TableConfig",
-      "type": "object"
     }
   },
   "uiSchema": {
@@ -1457,30 +1302,6 @@
         }
       }
     },
-    "Ammunition Summary Table": {
-      "ammo_table": {
-        "ui:order": [
-          "columns",
-          "table_config"
-        ]
-      }
-    },
-    "Personnel Activity Table": {
-      "personnel_table": {
-        "ui:order": [
-          "columns",
-          "table_config"
-        ]
-      }
-    },
-    "Agresion Breakdown": {
-      "lesiones_table": {
-        "ui:order": [
-          "columns",
-          "table_config"
-        ]
-      }
-    },
     "ui:order": [
       "workflow_details",
       "er_client",
@@ -1492,9 +1313,6 @@
       "Local Spatial Features",
       "Map of Weapon-Use Incidents",
       "Trends Over Time",
-      "Ammunition Summary Table",
-      "Personnel Activity Table",
-      "Agresion Breakdown",
       "get_template_path"
     ]
   },
